@@ -32,8 +32,6 @@ def main():
             continue
 
         except requests.exceptions.ReadTimeout:
-            print('Сервер не ответил в течение указанного времени ожидания. ' +
-                  'Повторный запрос.')
             continue
 
         except requests.exceptions.ConnectionError:
