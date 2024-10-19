@@ -21,11 +21,11 @@ def main():
     url = 'https://dvmn.org/api/long_polling/'
 
     while True:
-        response_raw = None
+        raw_response = None
         try:
-            response_raw = requests.get(
+            raw_response = requests.get(
                 url, headers=headers, params=params, timeout=100)
-            response_raw.raise_for_status()
+            raw_response.raise_for_status()
 
         except requests.HTTPError as err:
             print(*err, file=sys.stderr)
@@ -41,8 +41,8 @@ def main():
             time.sleep(5)
             continue
 
-        if response_raw:
-            response = response_raw.json()
+        if raw_response:
+            response = raw_response.json()
             if response['status'] == 'timeout':
                 timestamp_to_request = response['timestamp_to_request']
             if response['status'] == 'found':
