@@ -1,7 +1,6 @@
 import logging
 import os
 import requests
-import sys
 import telegram
 import time
 
@@ -45,7 +44,8 @@ def run_bot(bot, chat_id):
             raw_response.raise_for_status()
 
         except requests.HTTPError as err:
-            print(*err, file=sys.stderr)
+            logger.warning("Ошибка обращения к dvmn.org")
+            logger.warning(err)
             continue
 
         except requests.exceptions.ReadTimeout:
