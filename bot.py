@@ -1,18 +1,27 @@
+import logging
+import os
 import requests
-import time
 import sys
 import telegram
-import os
+import time
+
 from dotenv import load_dotenv
 from telegram import ParseMode
 
 
-def main():
-    load_dotenv()
-    telegram_api_key = os.environ['TG_HTTP_TOKEN']
-    bot = telegram.Bot(token=telegram_api_key)
-    chat_id = os.environ['TG_CHAT_ID']
+class TelegramLogsHandler(logging.Handler):
 
+    def __init__(self, tg_bot, chat_id):
+        super().__init__()
+        self.chat_id = chat_id
+        self.tg_bot = tg_bot
+
+    def emit(self, record):
+        log_entry = self.format(record)
+        self.tg_bot.send_message(chat_id=self.chat_id, text=log_entry)
+
+
+def run_bot(bot, chat_id):
     info_text = """У вас проверили работу "{}" """ + \
         """([Ссылка на урок]({})).\n\n"""
     negative_text = 'К сожалению, в работе нашлись ошибки.'
@@ -25,6 +34,8 @@ def main():
     headers = {'Authorization': f'Token {devman_token}'}
     params = {'timestamp': timestamp_to_request}
     url = 'https://dvmn.org/api/long_polling/'
+
+    logger.info('Бот запущен')
 
     while True:
         raw_response = None
@@ -67,4 +78,13 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    load_dotenv()
+    telegram_api_key = os.environ['TG_HTTP_TOKEN']
+    bot = telegram.Bot(token=telegram_api_key)
+    chat_id = os.environ['TG_CHAT_ID']
+
+    logger = logging.getLogger('Logger')
+    logger.setLevel(logging.INFO)
+    logger.addHandler(TelegramLogsHandler(bot, chat_id))
+
+    run_bot(bot, chat_id)
