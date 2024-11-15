@@ -79,7 +79,7 @@ def run_bot(bot, chat_id):
 
 if __name__ == '__main__':
     load_dotenv()
-    telegram_api_key = os.environ['TG_HTTP_TOKEN']
+    telegram_api_key = os.environ['TG_NOTIFICATIONS_LOG_BOT_TOKEN']
     bot = telegram.Bot(token=telegram_api_key)
     chat_id = os.environ['TG_CHAT_ID']
 
