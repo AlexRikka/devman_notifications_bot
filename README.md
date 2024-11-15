@@ -21,7 +21,7 @@ pip install -r requirements.txt
 ### Запуск
 Запустите программу:
 ```
-python main.py
+python bot.py
 ```
 
 
